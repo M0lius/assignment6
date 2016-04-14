@@ -2,14 +2,12 @@ package assignment6;
 
 public class Hall{
 	//Seat[][]
-	private Seat[][] seats = new Seat[27][28];
-	String[] rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA"};
-	
+	private Seat[][] seats = new Seat[27][28];	
 	
 	public Hall(){
 		for(int i = 0; i < 27; i++){
 			for (int j = 0; j < 28; j++){
-				seats[i][j] = new Seat(rows[i],j);
+				seats[i][j] = new Seat(i,j);
 			}
 		}
 	}
