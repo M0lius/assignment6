@@ -1,28 +1,43 @@
 package assignment6;
 
-public class Hall {
+public class Hall{
 	//Seat[][]
-	private Seat[][] Seats = new Seat[27][28];
+	private Seat[][] seats = new Seat[27][28];
 	String[] rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA"};
+	
 	
 	public Hall(){
 		for(int i = 0; i < 27; i++){
 			for (int j = 0; j < 28; j++){
-				Seats[i][j] = new Seat(rows[i],j);
+				seats[i][j] = new Seat(rows[i],j);
 			}
 		}
 	}
 	
 	public boolean isSeatTaken(int row, int column){
-		return Seats[row][column].isTaken();
+		return seats[row][column].isTaken();
 	}
 	
 	public void markAvailableSeatTaken(int row, int column){
-		Seats[row][column].setTaken(true);
+		seats[row][column].setTaken(true);
 	}
 	
-	public void bestAvailableSeat(){
+	public Seat bestAvailableSeat() throws SoldOut{
+		for(int row = 0; row < 27; row ++){
+			for(int column = 9; column < 29; column++){
+				if(!seats[row][column].isTaken()){
+					seats[row][column].setTaken(true);
+					return seats[row][column];
+				}
+			}
+			for(int column = 0; column < 29; column++){
+				if(!seats[row][column].isTaken()){
+					seats[row][column].setTaken(true);
+					return seats[row][column];
+				}
+			}
+		}
 		
-		
+		throw new SoldOut("No more Tickets");
 	}
 }
