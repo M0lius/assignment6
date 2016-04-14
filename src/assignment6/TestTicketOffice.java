@@ -52,6 +52,7 @@ public class TestTicketOffice {
 	public void twoConcurrentServerTest() {
 		try {
 			TicketServer.start(16792);
+			TicketServer.start(16793);
 		} catch (Exception e) {
 			fail();
 		}
