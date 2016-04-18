@@ -8,7 +8,7 @@ public class TestTicketOffice {
 
 	public static int score = 0;
 
-	// @Test
+	@Test
 	public void basicServerTest() {
 		try {
 			TicketServer.start(16789);
@@ -17,6 +17,7 @@ public class TestTicketOffice {
 		}
 		TicketClient client = new TicketClient();
 		client.requestTicket();
+		TicketServer.stop();
 	}
 
 	@Test
@@ -30,7 +31,8 @@ public class TestTicketOffice {
 		TicketClient client2 = new TicketClient("localhost", "c2");
 		client1.requestTicket();
 		client2.requestTicket();
-		
+		TicketServer.stop();
+
 	}
 
 	@Test
@@ -46,13 +48,33 @@ public class TestTicketOffice {
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
+		TicketServer.stop();
+
+	}
+	
+	@Test
+	public void newCoolTest() {
+		try {
+			TicketServer.start(16793, "BoxOffice A");
+			TicketServer.start(16794, "BoxOffice B");
+		} catch (Exception e) {
+			fail();
+		}
+		TicketClient c1 = new TicketClient("John");
+		TicketClient c2 = new TicketClient("Worm");
+		TicketClient c3 = new TicketClient("Mario");
+		c1.requestTicket();
+		c2.requestTicket();
+		c3.requestTicket();
+		TicketServer.stop();
+
 	}
 
 	@Test
 	public void twoConcurrentServerTest() {
 		try {
 			TicketServer.start(16792);
-			TicketServer.start(16793);
+			//TicketServer.start(16793);
 		} catch (Exception e) {
 			fail();
 		}
@@ -84,6 +106,7 @@ public class TestTicketOffice {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		TicketServer.stop();
 
 	}
 }
