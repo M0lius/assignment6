@@ -7,12 +7,21 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 class ThreadedTicketClient{
-	String hostname = "127.0.0.1";
-	String threadname = "X";
-	int portNum = -1;
-	TicketClient sc;
-	Thread buyTicket;
-
+	String hostname = "127.0.0.1"; //localhost
+	String threadname = "X";//name of thread attending client
+	int portNum = -1; //number of port being used
+	TicketClient sc;// the client
+	Thread buyTicket; //thread when client is being attended
+	volatile static private boolean port1Busy = false;//if port1 is attending a client
+	volatile static private boolean port2Busy = false;//if port2 is attending a client
+    private static final Object waitObject = ThreadedTicketClient.class;
+ 	
+	static public boolean isPort1Busy(){
+		return port1Busy;
+	}
+	static public boolean isPort2Busy(){
+		return port2Busy;
+	}
 
 	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname) {
 		this.sc = sc;
@@ -23,13 +32,19 @@ class ThreadedTicketClient{
 
 	public void connect() {
 		System.out.flush();
-		while(TicketServer.isPort1Busy()&& TicketServer.isPort2Busy()){}//wait till one port is open
-		if (!TicketServer.isPort1Busy()) { //port one is not busy
-			portNum = TicketServer.PORT; //use port one
-			TicketServer.setPort1Busy();//mark busy
+		while(isPort1Busy()&& isPort2Busy()){}//wait till one port is open
+		if (!isPort1Busy()) { //port one is not busy
+			synchronized (ThreadedTicketClient.waitObject){
+				portNum = TicketServer.PORT; //use port one
+				port1Busy = true;//mark port 2 free;
+				ThreadedTicketClient.waitObject.notifyAll();
+			}
 		} else if(TicketServer.PORT2 != -1) {//port two is initialized
-			portNum = TicketServer.PORT2;//use port two
-			TicketServer.setPort2Busy();//mark busy
+			synchronized (ThreadedTicketClient.waitObject){
+				portNum = TicketServer.PORT2;//use port two
+				port2Busy = true;//mark port 2 free;
+				ThreadedTicketClient.waitObject.notifyAll();
+			}
 		}
 		
 		buyTicket = new Thread() {
@@ -48,12 +63,12 @@ class ThreadedTicketClient{
 						System.out.println(serverName + " has sold a ticket to " + threadname);
 						System.out.println("TICKET INFO: " + ticketInfo);
 						//out.println("THANKS!");
-						Thread.sleep(500);
+						Thread.sleep(150);
 						
 					} else {
 						System.out.println("SOLD OUT: " + serverName + " unable to sell a ticket to " + threadname);
 						//out.println(":(");
-						Thread.sleep(500);
+						Thread.sleep(150);
 					}
 					// BufferedReader stdIn = new BufferedReader(new
 					// InputStreamReader(System.in));
@@ -66,12 +81,14 @@ class ThreadedTicketClient{
 					e.printStackTrace();
 				}
 				if(portNum == TicketServer.PORT){//if used port one
-					synchronized (TicketServer.class){
-						TicketServer.setPort1Free();//mark it free
+					synchronized (ThreadedTicketClient.waitObject){
+						port1Busy = false;//mark it free
+						ThreadedTicketClient.waitObject.notifyAll();
 					}
 				} else {
-					synchronized (TicketServer.class){
-						TicketServer.setPort2Free();//mark port 2 free;
+					synchronized (ThreadedTicketClient.waitObject){
+						port2Busy = false;//mark port 2 free;
+						ThreadedTicketClient.waitObject.notifyAll();
 					}
 				}
 			}

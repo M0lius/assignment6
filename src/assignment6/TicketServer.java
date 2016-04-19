@@ -8,28 +8,26 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TicketServer {
-	static int PORT = -1;
-	static int PORT2 = -1;
-	static private boolean port1Busy = false;
-	static private boolean port2Busy = false;
-	static Hall batesHall = new Hall();
-	// EE422C: no matter how many concurrent requests you get,
-	// do not have more than three servers running concurrently
-	final static int MAXPARALLELTHREADS = 3;
+	static int PORT = -1;// Port value of Port 1
+	static int PORT2 = -1;//Port value of Port 2
+	static Hall batesHall = new Hall(); //the theater hall we are selling seats for
+	final static int MAXPARALLELTHREADS = 3; //we are only using 2 servers like pdf said
 
 	public static void start(int portNumber) throws IOException {
-		if (PORT == -1) {
-			PORT = portNumber;
-		} else if (PORT2 == -1){
-			PORT2 = portNumber;
+		if (PORT == -1) { //first port not initialized
+			PORT = portNumber; //initalize it
+		} else if (PORT2 == -1){ //first port initialized but not the second
+			PORT2 = portNumber; //initialize it
 		} else {
-			return;
+			return; //no more than two ports please (makes this call useless
 		}
-		Runnable serverThread = new ThreadedTicketServer(portNumber, "noname");
+		Runnable serverThread = new ThreadedTicketServer(portNumber, "noname");//if no name given
 		Thread t = new Thread(serverThread);		
 		t.start();
 		
 	}
+	
+	//same as above but initializes name of server
 	public static void start(int portNumber, String serverName) throws IOException {
 		if (PORT == -1) {
 			PORT = portNumber;
@@ -42,29 +40,13 @@ public class TicketServer {
 		Thread t = new Thread(serverThread);		
 		t.start();
 	}
-	public static void stop(){
+	
+	public static void reset(){ //resets both ports and the theater seats
 		PORT = -1;
 		PORT2 = -1;
 		batesHall = new Hall();
 	}
-	static public boolean isPort1Busy(){
-		return port1Busy;
-	}
-	static public boolean isPort2Busy(){
-		return port2Busy;
-	}
-	static public void setPort1Free(){
-			port1Busy = false;
-	}
-	static public void setPort2Free(){
-			port2Busy = false;
-	}
-	static public void setPort1Busy(){
-			port1Busy = true;
-	}
-	static public void setPort2Busy(){
-			port2Busy = true;
-	}
+	
 	
 }
 
@@ -107,7 +89,7 @@ class ThreadedTicketServer implements Runnable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 }
 	
