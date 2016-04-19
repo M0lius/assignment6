@@ -22,22 +22,22 @@ public class Seat
 		this.row = rows[row];
 		this.column = column + 101;
 		
-		if(row < 14 && column < 10){
+		if(row < 14 && column < 9){
 			location = "FR"; //Front Right
 		}
 		if(row < 14 && column > 19){
 			location = "FL"; //Front Left
 		}
-		if(row < 14 && column >= 10 && column <= 19){
+		if(row < 14 && column >= 9 && column <= 19){
 			location = "FM"; //Front Middle
 		}
-		if(row >= 14 && column < 10){
+		if(row >= 14 && column < 9){
 			location = "BR"; //Back Right
 		}
 		if(row >= 14 && column > 19){
 			location = "BL"; //Back Left
 		}
-		if(row >= 14 && column >= 10 && column <= 19){
+		if(row >= 14 && column >= 9 && column <= 19){
 			location = "BM"; //Back Middle
 		}
 	}

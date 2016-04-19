@@ -22,13 +22,13 @@ public class Hall{
 	
 	public Seat bestAvailableSeat() throws SoldOut{
 		for(int row = 0; row < 27; row ++){
-			for(int column = 9; column < 29; column++){
+			for(int column = 9; column < 28; column++){
 				if(!seats[row][column].isTaken()){
 					seats[row][column].setTaken(true);
 					return seats[row][column];
 				}
 			}
-			for(int column = 0; column < 29; column++){
+			for(int column = 0; column < 9; column++){
 				if(!seats[row][column].isTaken()){
 					seats[row][column].setTaken(true);
 					return seats[row][column];

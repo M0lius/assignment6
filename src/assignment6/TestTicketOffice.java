@@ -11,92 +11,95 @@ public class TestTicketOffice {
 
 	public static int score = 0;
 
-	@Test
-	public void basicServerTest() {
-		try {
-			TicketServer.start(16789);
-		} catch (Exception e) {
-			fail();
-		}
-		TicketClient client = new TicketClient();
-		client.requestTicket();
-		TicketServer.stop();
-	}
-
-	@Test
-	public void testServerCachedHardInstance() {
-		try {
-			TicketServer.start(16790);
-		} catch (Exception e) {
-			fail();
-		}
-		TicketClient client1 = new TicketClient("localhost", "c1");
-		TicketClient client2 = new TicketClient("localhost", "c2");
-		client1.requestTicket();
-		client2.requestTicket();
-		TicketServer.stop();
-
-	}
-
-	@Test
-	public void twoNonConcurrentServerTest() {
-		try {
-			TicketServer.start(16791);
-		} catch (Exception e) {
-			fail();
-		}
-		TicketClient c1 = new TicketClient("nonconc1");
-		TicketClient c2 = new TicketClient("nonconc2");
-		TicketClient c3 = new TicketClient("nonconc3");
-		c1.requestTicket();
-		c2.requestTicket();
-		c3.requestTicket();
-		TicketServer.stop();
-
-	}
+//	@Test
+//	public void basicServerTest() {
+//		try {
+//			TicketServer.start(16789);
+//		} catch (Exception e) {
+//			fail();
+//		}
+//		TicketClient client = new TicketClient();
+//		client.requestTicket();
+//		TicketServer.stop();
+//	}
+//
+//	@Test
+//	public void testServerCachedHardInstance() {
+//		try {
+//			TicketServer.start(16790);
+//		} catch (Exception e) {
+//			fail();
+//		}
+//		TicketClient client1 = new TicketClient("localhost", "c1");
+//		TicketClient client2 = new TicketClient("localhost", "c2");
+//		client1.requestTicket();
+//		client2.requestTicket();
+//		TicketServer.stop();
+//
+//	}
+//
+//	@Test
+//	public void twoNonConcurrentServerTest() {
+//		try {
+//			TicketServer.start(16791);
+//		} catch (Exception e) {
+//			fail();
+//		}
+//		TicketClient c1 = new TicketClient("nonconc1");
+//		TicketClient c2 = new TicketClient("nonconc2");
+//		TicketClient c3 = new TicketClient("nonconc3");
+//		c1.requestTicket();
+//		c2.requestTicket();
+//		c3.requestTicket();
+//		TicketServer.stop();
+//
+//	}
 	
-	@Test
-	public void DoubleServerTest() {
-		try {
-			TicketServer.start(16793, "BoxOffice A");
-			TicketServer.start(16795, "BoxOffice B");
-		} catch (Exception e) {
-			fail();
-		}
-		TicketClient c1 = new TicketClient("John");
-		TicketClient c2 = new TicketClient("Worm");
-		TicketClient c3 = new TicketClient("Mario");
-		c1.requestTicket();
-		c2.requestTicket();
-		c3.requestTicket();
-		
-		TicketServer.stop();
-
-	}
+//	@Test
+//	public void DoubleServerTest() {
+//		try {
+//			TicketServer.start(16793, "BoxOffice A");
+//			TicketServer.start(16795, "BoxOffice B");
+//		} catch (Exception e) {
+//			fail();
+//		}
+//		TicketClient c1 = new TicketClient("John");
+//		TicketClient c2 = new TicketClient("Worm");
+//		TicketClient c3 = new TicketClient("Mario");
+//		c1.requestTicket();
+//		c2.requestTicket();
+//		c3.requestTicket();
+//		
+//		TicketServer.stop();
+//
+//	}
 	
 	@Test
 	public void main() {
-		int customers = 5;
+		int customers = 0;
 		Queue<TicketClient> line = new LinkedList<TicketClient>();
-		int random = (int )(Math.random() * 901 + 100);
+		int random = (int )(Math.random() * 901 + 100);//adds a number between 100-1000
+		customers += random;
 		for(int i = 0; i < random + 1; i++){
 			line.add(new TicketClient(new String("Person" + Integer.toString(i))));
 		}
 		
 		try {
 			TicketServer.start(16798, "BoxOffice A");
-			//TicketServer.start(16796, "BoxOffice B");
+			TicketServer.start(16796, "BoxOffice B");
 		} catch (Exception e) {
 			fail();
 		}		
 		while(!line.isEmpty()){
 			TicketClient nextInLine = line.remove();
 			nextInLine.requestTicket();
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
+			if (line.size() < 100){ //adds more customers if line has less than 100 customers
+				random = (int )(Math.random() * 801 + 100); //adds a number between 100-800
+				for(int i = customers; i < random + customers + 1; i++){
+					line.add(new TicketClient(new String("Person" + Integer.toString(i))));
+				}
+				customers += random;
 			}
 		}
 		
