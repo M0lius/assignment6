@@ -76,7 +76,7 @@ public class TestTicketOffice {
 	
 	@Test
 	public void main() {
-		int customers = 0;
+		int customers = 5;
 		Queue<TicketClient> line = new LinkedList<TicketClient>();
 		int random = (int )(Math.random() * 901 + 100);
 		for(int i = 0; i < random + 1; i++){
