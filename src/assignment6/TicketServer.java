@@ -10,8 +10,8 @@ import java.net.Socket;
 public class TicketServer {
 	static int PORT = -1;
 	static int PORT2 = -1;
-	static boolean port1Busy = false;
-	static boolean port2Busy = false;
+	static private boolean port1Busy = false;
+	static private boolean port2Busy = false;
 	static Hall batesHall = new Hall();
 	// EE422C: no matter how many concurrent requests you get,
 	// do not have more than three servers running concurrently
@@ -47,6 +47,24 @@ public class TicketServer {
 		PORT2 = -1;
 		batesHall = new Hall();
 	}
+	static public boolean isPort1Busy(){
+		return port1Busy;
+	}
+	static public boolean isPort2Busy(){
+		return port2Busy;
+	}
+	static public void setPort1Free(){
+			port1Busy = false;
+	}
+	static public void setPort2Free(){
+			port2Busy = false;
+	}
+	static public void setPort1Busy(){
+			port1Busy = true;
+	}
+	static public void setPort2Busy(){
+			port2Busy = true;
+	}
 	
 }
 
@@ -62,6 +80,7 @@ class ThreadedTicketServer implements Runnable {
 		threadname = serverName;
 	}
 
+
 	public void run() {
 		// TODO 422C
 		ServerSocket serverSocket;
@@ -69,31 +88,21 @@ class ThreadedTicketServer implements Runnable {
 			while(true){
 				serverSocket = new ServerSocket(PORT);
 				Socket clientSocket = serverSocket.accept();
-				if(this.PORT == TicketServer.PORT){
-					TicketServer.port1Busy = true;
-				} else {
-					TicketServer.port2Busy = true;
-				}
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out.println(threadname);
 				try{
 					Seat best = TicketServer.batesHall.bestAvailableSeat();
+					TicketServer.batesHall.markAvailableSeatTaken(best.getRowLocation(), best.getColumnLocation());
 					out.println("Sold!");
-					out.print("ROW: " + best.getRow());
-					out.print(" SEAT: " + Integer.toString(best.getNumber()));
-					out.println(" AREA: " + best.getLocation());
+					out.println(best.printTicketSeat());
 					
 				} catch (SoldOut e) {
 					out.println("SoldOut!");	
 				}
+				in.close();
 				out.close();
 				serverSocket.close();
-				if(this.PORT == TicketServer.PORT){
-					TicketServer.port1Busy = false;
-				} else {
-					TicketServer.port2Busy = false;
-				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

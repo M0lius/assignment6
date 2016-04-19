@@ -5,6 +5,8 @@ public class Seat
 	private String[] rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA"};
 	private boolean taken;
 	private String row;
+	public int rowNum;
+	public int columnNum;
 	private int column;
 	private String location;
 	
@@ -12,6 +14,8 @@ public class Seat
 	{
 		taken = false;
 		row = "";
+		rowNum = -1;
+		columnNum = -1;
 		column = -1;
 		location = "invalid";
 	}
@@ -19,6 +23,8 @@ public class Seat
 	public Seat(int row, int column)
 	{
 		taken = false;
+		this.rowNum = row;
+		this.columnNum = column;
 		this.row = rows[row];
 		this.column = column + 101;
 		
@@ -54,13 +60,25 @@ public class Seat
 		return location;
 	}
 
-	public int getNumber() {
+	public int getColumn() {
 		return column;
+	}
+	
+	public int getRowLocation(){
+		return rowNum;
+	}
+	public int getColumnLocation(){
+		return columnNum;
 	}
 	
 	public void setTaken(boolean status)
 	{
 		taken = status;
+	}
+	public String printTicketSeat(){
+		String ticket = new String("ROW: " + this.row + 
+				" SEAT: " + Integer.toString(column)+ " AREA: " + this.location);
+		return ticket;
 	}
 	
 }
