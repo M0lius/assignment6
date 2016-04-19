@@ -24,7 +24,7 @@ public class TicketServer {
 		} else {
 			return;
 		}
-		Runnable serverThread = new ThreadedTicketServer();
+		Runnable serverThread = new ThreadedTicketServer(portNumber);
 		Thread t = new Thread(serverThread);		
 		t.start();
 		
@@ -39,13 +39,13 @@ public class TicketServer {
 		} else {
 			return;
 		}
-		Runnable serverThread = new ThreadedTicketServer();
+		Runnable serverThread = new ThreadedTicketServer(portNumber);
 		Thread t = new Thread(serverThread);		
 		t.start();
 	}
 	public static void stop(){
 		PORT = -1;
-		PORT2 = -2;		
+		PORT2 = -1;		
 	}
 }
 
@@ -55,12 +55,17 @@ class ThreadedTicketServer implements Runnable {
 	String threadname = "X";
 	String testcase;
 	TicketClient sc;
+	int PORT = -1;
+	
+	ThreadedTicketServer(int portNumber){
+		PORT = portNumber;
+	}
 
 	public void run() {
 		// TODO 422C
 		ServerSocket serverSocket;
 		try {
-			serverSocket = new ServerSocket(TicketServer.PORT);
+			serverSocket = new ServerSocket(PORT);
 			Socket clientSocket = serverSocket.accept();
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

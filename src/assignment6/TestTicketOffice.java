@@ -53,10 +53,10 @@ public class TestTicketOffice {
 	}
 	
 	@Test
-	public void newCoolTest() {
+	public void DoubleServerTest() {
 		try {
 			TicketServer.start(16793, "BoxOffice A");
-			TicketServer.start(16794, "BoxOffice B");
+			TicketServer.start(16795, "BoxOffice B");
 		} catch (Exception e) {
 			fail();
 		}
@@ -66,9 +66,24 @@ public class TestTicketOffice {
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
+		
 		TicketServer.stop();
 
 	}
+	
+//	@Test
+//	public void main() {
+//		int customers = 0;
+//		Queue<TicketClient> line = new 
+//		try {
+//			TicketServer.start(16795, "BoxOffice A");
+//			TicketServer.start(16796, "BoxOffice B");
+//		} catch (Exception e) {
+//			fail();
+//		}		
+//		TicketServer.stop();
+//
+//	}
 
 	@Test
 	public void twoConcurrentServerTest() {
