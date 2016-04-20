@@ -1,16 +1,24 @@
+/**
+ * Classes to simulate clients and ticket servers
+ * @author Tauseef Aziz
+ * @author Mario Molina
+ * @version 1.00 2016-4-20
+ */
+
 package assignment6;
 
+//Purpose: Defines Seat that are in the hall
 public class Seat
 {
 	
-	private String[] rows = {"A","B","C","D","E","F","G","H","I",
+	final static String[] rows = {"A","B","C","D","E","F","G","H","I",
 	"J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA"};  //alphabet+AA
 	
 	private boolean taken; //true if seat is taken
 	private boolean beingConsidered;
 	private String row;// Strin A - AA
-	public int rowNum;// the index of the row
-	public int columnNum; //the index of the column 
+	private int rowNum;// the index of the row
+	private int columnNum; //the index of the column 
 	private int column; // seat number from 101-128
 	private String location; //general location (check below)
 	/*
@@ -18,6 +26,9 @@ public class Seat
 	 * BM = BackMiddle   BR = Back Right  BL = Back Left
 	 */
 	
+	/**
+	 * General Seat constructor
+	 */
 	public Seat() //general initializer, just puts invalid values on variables 
 	{
 		taken = true; 
@@ -27,7 +38,11 @@ public class Seat
 		column = -1;
 		location = "invalid";
 	}
-	
+	/**
+	 * Seat constructor
+	 * @param row
+	 * @param column
+	 */
 	public Seat(int row, int column) //Initializes a seat
 	{
 		taken = false;
@@ -87,7 +102,6 @@ public class Seat
 		taken = status;
 	}
 	
-	
 	public boolean isBeingConsidered() {
 		return beingConsidered;
 	}
@@ -96,7 +110,10 @@ public class Seat
 		this.beingConsidered = beingConsidered;
 	}
 
-	//outputs a string with the general seat information
+	/**
+	 * outputs a string with the general seat information
+	 * @return String with ticket info
+	 */
 	public String printTicketSeat(){
 		String ticket = new String("ROW: " + this.row + 
 				" SEAT: " + Integer.toString(column)+ " AREA: " + this.location);

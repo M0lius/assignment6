@@ -1,3 +1,10 @@
+/**
+ * Classes to simulate clients and ticket servers
+ * @author Tauseef Aziz
+ * @author Mario Molina
+ * @version 1.00 2016-4-20
+ */
+
 package assignment6;
 
 import java.io.BufferedReader;
@@ -7,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+//Purpose: Defines ticket server
 public class TicketServer {
 	static int PORT = -1;// Port value of Port 1
 	static int PORT2 = -1;//Port value of Port 2
@@ -50,6 +58,7 @@ public class TicketServer {
 	
 }
 
+//Purpose: Runs the ticket server
 class ThreadedTicketServer implements Runnable {
 
 	String hostname = "127.0.0.1"; 
@@ -57,19 +66,23 @@ class ThreadedTicketServer implements Runnable {
 	TicketClient sc;
 	int PORT = -1;
 	
+	/**
+	 * Constructor for ticket server runner
+	 * @param portNumber
+	 * @param serverName
+	 */
 	ThreadedTicketServer(int portNumber, String serverName){
 		PORT = portNumber;
 		threadname = serverName;
 	}
 
-
 	public void run() {
-		// TODO 422C
 		ServerSocket serverSocket;
 		try {
 			while(true){
 				serverSocket = new ServerSocket(PORT);
 				Socket clientSocket = serverSocket.accept();
+				//used to send messages to client
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out.println(threadname);
@@ -78,18 +91,22 @@ class ThreadedTicketServer implements Runnable {
 					boolean foundSeat = false;
 					while(!foundSeat){
 						try {
+							//find best available seat
 							best = TicketServer.batesHall.bestAvailableSeat();
 							foundSeat = true;
 						} catch (SeatInLimbo e){
+							//seat found has already been reserved
 							System.out.println(threadname + ": Failed to Reserve " + e.getInvalidSeatInfo());
 						}
 					}
+					//sends ticket received message to client
 					TicketServer.batesHall.markAvailableSeatTaken(best.getRowLocation(), best.getColumnLocation());
 					out.println("Sold!");
 					out.println(best.printTicketSeat());
 
 					
 				} catch (SoldOut e) {
+					//Sends sold out message to client
 					out.println("SoldOut!");
 					System.exit(0);
 				}

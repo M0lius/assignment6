@@ -1,15 +1,80 @@
+/**
+ * Classes to simulate clients and ticket servers
+ * @author Tauseef Aziz
+ * @author Mario Molina
+ * @version 1.00 2016-4-20
+ */
+
+
 package assignment6;
 
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 import org.junit.Test;
 
+//Purpose: Test our client and ticket server simulation
 public class TestTicketOffice {
+	//array of random names
+	final static String[] NAMES = {"Nelle", "Anja" , "Charolette", "Burt", "Tauseef", "Ariel", "Modesto", "Reina", "Ed", 
+										"Sondra", "Lyla", "Ruby", "Kent", "Noe", "Pamela", "Susanna", "Shaneka", "Jesica", 
+										"Willow", "Debbi", "Mario", "Warren", "Filiberto", "Cruz", "Kerri", "Antoinette", 
+										"Lashunda", "Werner", "Clifton", "Lena", "Aleshia", "Dann", "Camila", "Cherise", 
+										"Benny", "Lupe", "Monty", "Lura", "Hermelinda", "Darline", "Venetta", "Alfredo", 
+										"Donnette", "Rolf", "Robin", "Adolph", "Angla", "Elissa", "Jennine", "Keri", "Magaly", 
+										"Hobert", "Perry", "Lisa", "Jo", "Mehtaab", "Niraj", "Chase", "Valvano", "Che", "Telang",
+										"Yerraballi", "Fatima", "Amanda", "Farhan", "Jett", "Maxwell", "Brandon", "Alec",
+										"Garret", "Andrei", "Tong", "Kevin", "Caroline", "Brian", "Horng-Bin", "Qing", "Allen", 
+										"Henry", "Sneha", "Alvin", "Ali", "Rohan", "Rikin", "George", "Michael", "Kaisheng"};
 
 	public static int score = 0;
+	/**
+	 * Randomly selects a name from an array
+	 * @param array String array holding names
+	 * @return String returns a random name from the array
+	 */
+	public String getRandomName(String[] array) {
+		Random rand = new Random();
+		int i = rand.nextInt(array.length);
+		return array[i];
+	}
+	
+	//Our test to fully simulate tickets being sold for Bates Hall
+	@Test
+	public void main() {
+		int customers = 0;
+		//line of ticket clients
+		Queue<TicketClient> line = new LinkedList<TicketClient>();
+		int random = (int )(Math.random() * 901 + 100);//adds a number between 100-1000
+		customers += random;
+		for(int i = 0; i < random + 1; i++){
+			//adds clients to queue
+			line.add(new TicketClient("localhost", getRandomName(NAMES), i +1));
+		}
+		try {
+			//Starts two ticket servers
+			TicketServer.start(16798, "BoxOffice A");
+			TicketServer.start(16796, "BoxOffice B");
+		} catch (Exception e) {
+			fail();
+		}
+		while(!line.isEmpty()){
+			TicketClient nextInLine = line.remove();
+			nextInLine.requestTicket();
+			
+			if (line.size() < 100){ //adds more customers if line has less than 100 customers
+				random = (int )(Math.random() * 801 + 100); //adds a number between 100-800
+				for(int i = customers + 1; i < random + customers + 1; i++){
+					line.add(new TicketClient("localhost", getRandomName(NAMES), i +1));
+				}
+				customers += random;
+			}
+		}
+		TicketServer.reset();
+	}
 
 //	@Test
 //	public void basicServerTest() {
@@ -74,39 +139,6 @@ public class TestTicketOffice {
 //
 //	}
 	
-	@Test
-	public void main() {
-		int customers = 0;
-		Queue<TicketClient> line = new LinkedList<TicketClient>();
-		int random = (int )(Math.random() * 901 + 100);//adds a number between 100-1000
-		customers += random;
-		for(int i = 0; i < random + 1; i++){
-			line.add(new TicketClient(new String("Person" + Integer.toString(i))));
-		}
-		
-		try {
-			TicketServer.start(16798, "BoxOffice A");
-			TicketServer.start(16796, "BoxOffice B");
-		} catch (Exception e) {
-			fail();
-		}		
-		while(!line.isEmpty()){
-			TicketClient nextInLine = line.remove();
-			nextInLine.requestTicket();
-			
-			if (line.size() < 100){ //adds more customers if line has less than 100 customers
-				random = (int )(Math.random() * 801 + 100); //adds a number between 100-800
-				for(int i = customers + 1; i < random + customers + 1; i++){
-					line.add(new TicketClient(new String("Person" + Integer.toString(i))));
-				}
-				customers += random;
-			}
-		}
-		
-		TicketServer.reset();
-
-	}
-
 //	@Test
 //	public void twoConcurrentServerTest() {
 //		try {
