@@ -20,16 +20,28 @@ public class Hall{
 		seats[row][column].setTaken(true);
 	}
 	
-	public Seat bestAvailableSeat() throws SoldOut{ //requirement
+	public synchronized Seat bestAvailableSeat() throws SoldOut, SeatInLimbo{ //requirement
 		for(int row = 0; row < 27; row ++){
 			for(int column = 9; column < 28; column++){
 				if(!seats[row][column].isTaken()){
-					return seats[row][column];
+					if(!seats[row][column].isBeingConsidered()){
+						seats[row][column].setBeingConsidered(true);
+						return seats[row][column];
+					}
+					else{
+						throw new SeatInLimbo("seat is already being considered", seats[row][column]);
+					}
 				}
 			}
 			for(int column = 0; column < 9; column++){
 				if(!seats[row][column].isTaken()){
-					return seats[row][column];
+					if(!seats[row][column].isBeingConsidered()){
+						seats[row][column].setBeingConsidered(true);
+						return seats[row][column];
+					}
+					else{
+						throw new SeatInLimbo("seat is already being considered", seats[row][column]);
+					}
 				}
 			}
 		}

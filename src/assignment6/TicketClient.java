@@ -60,8 +60,8 @@ class ThreadedTicketClient{
 					String Sold = in.readLine();
 					if (Sold.equals("Sold!")) {
 						String ticketInfo = in.readLine();
-						System.out.println(serverName + " has sold a ticket to " + threadname);
-						System.out.println("TICKET INFO: " + ticketInfo);
+						System.out.println(serverName + " has sold a ticket to " + threadname + " || TICKET INFO: " + ticketInfo);
+						//System.out.println("TICKET INFO: " + ticketInfo);
 						//out.println("THANKS!");
 						Thread.sleep(150);
 						

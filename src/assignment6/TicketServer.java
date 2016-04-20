@@ -74,13 +74,24 @@ class ThreadedTicketServer implements Runnable {
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out.println(threadname);
 				try{
-					Seat best = TicketServer.batesHall.bestAvailableSeat();
+					Seat best = new Seat();
+					boolean foundSeat = false;
+					while(!foundSeat){
+						try {
+							best = TicketServer.batesHall.bestAvailableSeat();
+							foundSeat = true;
+						} catch (SeatInLimbo e){
+							System.out.println(threadname + ": Failed to Reserve " + e.getInvalidSeatInfo());
+						}
+					}
 					TicketServer.batesHall.markAvailableSeatTaken(best.getRowLocation(), best.getColumnLocation());
 					out.println("Sold!");
 					out.println(best.printTicketSeat());
+
 					
 				} catch (SoldOut e) {
-					out.println("SoldOut!");	
+					out.println("SoldOut!");
+					System.exit(0);
 				}
 				in.close();
 				out.close();

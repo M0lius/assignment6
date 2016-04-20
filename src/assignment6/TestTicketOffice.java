@@ -96,7 +96,7 @@ public class TestTicketOffice {
 			
 			if (line.size() < 100){ //adds more customers if line has less than 100 customers
 				random = (int )(Math.random() * 801 + 100); //adds a number between 100-800
-				for(int i = customers; i < random + customers + 1; i++){
+				for(int i = customers + 1; i < random + customers + 1; i++){
 					line.add(new TicketClient(new String("Person" + Integer.toString(i))));
 				}
 				customers += random;

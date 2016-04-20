@@ -7,6 +7,7 @@ public class Seat
 	"J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA"};  //alphabet+AA
 	
 	private boolean taken; //true if seat is taken
+	private boolean beingConsidered;
 	private String row;// Strin A - AA
 	public int rowNum;// the index of the row
 	public int columnNum; //the index of the column 
@@ -86,6 +87,15 @@ public class Seat
 		taken = status;
 	}
 	
+	
+	public boolean isBeingConsidered() {
+		return beingConsidered;
+	}
+
+	public void setBeingConsidered(boolean beingConsidered) {
+		this.beingConsidered = beingConsidered;
+	}
+
 	//outputs a string with the general seat information
 	public String printTicketSeat(){
 		String ticket = new String("ROW: " + this.row + 
