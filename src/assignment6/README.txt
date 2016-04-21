@@ -19,7 +19,7 @@ printTicketSeat is in the Seat class
 A ticket client is one client.
 
 TestTicketOffice has our main test called main at the top to simulate two servers selling tickets for Bates Hall and
-starts a queue of clients between 100 and 1000. Clients are randomly added as needed.
+starts a queue of clients between 100 and 1000. Clients are randomly added as needed and to fulfill the requirement.
 
 Seats that were closer to the front and in the middle section were prioritized as the best seats. If the front middle 
 seats of a row were filled up, then the seats to the left of the middle of that row would be filled up and then the 
